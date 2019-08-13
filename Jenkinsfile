@@ -19,7 +19,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script{
-   withDockerRegistry('dockerhub','') {
+   withDockerRegistry(['dockerhub','']) {
       // following commands will be executed within logged docker registry
        def customImage = docker.build("my-image:${env.BUILD_ID}")
        customImage.push()
