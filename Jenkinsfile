@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("getintodevops/hellonode")
+        app = docker.build("sanvs/spring-demo/")
     }
 
 
@@ -21,7 +21,7 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            app.push("sanvs/spring-demo/"+"${env.BUILD_NUMBER}")
+            app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
     }
