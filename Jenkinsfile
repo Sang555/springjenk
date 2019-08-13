@@ -1,4 +1,8 @@
 pipeline {
+      environment {
+    registry = "sanvs/spring-demo"
+    registryCredential = ‘dockerhub’
+  }
     agent any
     stages {
         stage('---clean---') {
@@ -19,11 +23,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script{
-   withDockerRegistry(['dockerhub','']) {
-      // following commands will be executed within logged docker registry
-       def customImage = docker.build("my-image:${env.BUILD_ID}")
-       customImage.push()
-   }
+   docker.build registry + ":$BUILD_NUMBER"
                 }
         }
     }
