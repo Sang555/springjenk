@@ -1,8 +1,8 @@
 pipeline {
       environment {
     registry = "sanvs/spring-demo"
-    registryCredential = ‘dockerhub’
-  }
+    registryCredential = 'dockerhub'
+      }
     agent any
     stages {
         stage('---clean---') {
@@ -27,6 +27,14 @@ pipeline {
                 }
         }
     }
-        
+     stage('Deploy Image') {
+  steps{
+    script {
+      docker.withRegistry( '', registryCredential ) {
+        dockerImage.push()
+      }
+    }
+  }
+}   
     }
 }
