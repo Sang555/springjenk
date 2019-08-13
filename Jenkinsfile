@@ -26,5 +26,6 @@ node {
             //app.push("${env.BUILD_NUMBER}")
             //app.push("latest")
         }
+        "docker push sanvs/spring-demo:tagname".execute()
     }
 }
