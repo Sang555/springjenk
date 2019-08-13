@@ -1,42 +1,32 @@
-pipeline {
-      environment {
-    registry = "sanvs/spring-demo"
-    registryCredential = 'dockerhub'
-      }
-    agent any
-    stages {
-        stage('---clean---') {
-            steps {
-                sh "mvn clean"
-            }
-        }
-        stage('--test--') {
-            steps {
-                sh "mvn test"
-            }
-        }
-        stage('--package--') {
-            steps {
-                sh "mvn package"
-            }
-        }
-        stage('Build image') {
-            steps {
-            
-                script{
-                sh "docker build -t springimage"      
-   dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
-        }
+node {
+    def app
+
+    stage('Clone repository') {
+        /* Let's make sure we have the repository cloned to our workspace */
+
+        checkout scm
     }
-     stage('Deploy Image') {
-  steps{
-    script {
-      docker.withRegistry( '', registryCredential ) {
-        dockerImage.push()
-      }
+
+    stage('Build image') {
+        //app=docker.build 'my-image:snapshot'
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+
+        app = docker.build("sanvs/spring-demo:tag")
+        
     }
-  }
-}   
+
+
+    stage('Push image') {
+        /* Finally, we'll push the image with two tags:
+         * First, the incremental build number from Jenkins
+         * Second, the 'latest' tag.
+         * Pushing multiple tags is cheap, as all the layers are reused. */
+        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            //app.push()
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+        
     }
 }
