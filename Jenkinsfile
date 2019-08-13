@@ -8,11 +8,12 @@ node {
     }
 
     stage('Build image') {
+        app=docker.build 'my-image:snapshot'
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
         //app = docker.build("sanvs/spring-demo/")
-        app=docker.build("sanvs/spring-demo:tag")
+        
     }
 
 
