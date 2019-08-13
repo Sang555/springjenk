@@ -22,7 +22,9 @@ pipeline {
         }
         stage('Build image') {
             steps {
+            
                 script{
+                sh "docker build -t springimage"      
    dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
         }
